@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import type { ReactNode } from "react";
 
 import { AppProviders } from "@/components/shared/AppProviders";
 import { SiteHeader } from "@/components/shared/SiteHeader";
@@ -20,7 +21,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = rootMetadata;
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+type TRootLayoutProps = {
+  children: ReactNode;
+};
+
+export default function RootLayout({ children }: TRootLayoutProps) {
   return (
     <html
       lang="en"
