@@ -25,7 +25,7 @@ specs              Spec Kit feature contracts
 
 ## Prerequisites
 
-- Node.js 24
+- Node.js 24. `.nvmrc` selects Node 24 for nvm. `.npmrc` makes pnpm download Node.js 24.11.1 and use it for installs and scripts, including when the shell `node` is older.
 - pnpm 10.25
 - Docker with Compose
 
