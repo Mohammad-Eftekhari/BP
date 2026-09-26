@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  next-themes:
+    hash: 51bbe9473540ddfc3e8489d9d14fc755297d118c76a1156b79c9aa16250695a6
+    path: patches/next-themes.patch
+
 importers:
 
   .:
@@ -37,7 +42,7 @@ importers:
         version: 16.3.6(@babel/core@7.29.7)(@playwright/test@1.63.0)(@types/node@24.19.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       next-themes:
         specifier: ^0.4.6
-        version: 0.4.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 0.4.6(patch_hash=51bbe9473540ddfc3e8489d9d14fc755297d118c76a1156b79c9aa16250695a6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       postgres:
         specifier: ^3.4.9
         version: 3.4.9
@@ -8972,7 +8977,7 @@ snapshots:
     dependencies:
       content-type: 2.1.0
 
-  next-themes@0.4.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  next-themes@0.4.6(patch_hash=51bbe9473540ddfc3e8489d9d14fc755297d118c76a1156b79c9aa16250695a6)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)

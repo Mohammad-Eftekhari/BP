@@ -80,7 +80,10 @@
     "onlyBuiltDependencies": [
       "esbuild",
       "sharp"
-    ]
+    ],
+    "patchedDependencies": {
+      "next-themes": "patches/next-themes.patch"
+    }
   },
   "packageManager": "pnpm@10.25.0"
 }
