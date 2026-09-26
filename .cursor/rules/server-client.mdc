@@ -1,0 +1,10 @@
+---
+description: Server and client import boundaries
+alwaysApply: true
+---
+
+- Database modules, repositories, server services, `src/lib/env/server.ts`, `src/lib/auth/auth.ts`, and `src/lib/logger/logger.ts` must import `server-only`.
+- Client components may import `src/lib/auth/auth-client.ts`, feature schemas, and `src/lib/api/client.ts`.
+- Do not pass secrets or session tokens to client components.
+- Do not read `NEXT_PUBLIC_` variables for secrets. Add a public variable only when the browser must see it.
+- `src/proxy.ts` may only check for a session cookie and redirect. It is not authorization.

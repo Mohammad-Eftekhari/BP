@@ -1,0 +1,10 @@
+---
+description: Spec-driven development expectations
+alwaysApply: true
+---
+
+- Meaningful behavior changes start by updating `specs/` and, when the behavior is governed, `.specify/memory/constitution.md`.
+- Spec Kit skills live in `.cursor/skills` and are owned by the Spec Kit CLI. Do not hand-edit those skill files.
+- Project rules in `.cursor/rules` are separate from Spec Kit skills.
+- Trivial copy or type fixes do not need a new specification.
+- After implementation, update the spec if the code intentionally changed the contract.

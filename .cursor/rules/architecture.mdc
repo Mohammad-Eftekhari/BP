@@ -1,0 +1,18 @@
+---
+description: Architecture boundaries for the modular monolith
+alwaysApply: true
+---
+
+This repository is one Next.js App Router application. UI, Route Handlers, and database access deploy together.
+
+- Put pages in `src/app`. Use route groups `(public)`, `(auth)`, and `(protected)`.
+- Put feature UI, schemas, and client query hooks in `src/features/<feature>`.
+- Put use-case functions in `src/server/services/<feature>`.
+- Put Drizzle queries in `src/server/repositories/<feature>`.
+- Put table definitions in `src/db/schema`.
+- Do not import `src/app` from `src/components` or `src/features`.
+- Do not import another feature's private files. Share code through `src/lib`, `src/components`, or `src/utils`.
+- Route Handlers authenticate, authorize, validate, call a service, and map the response. They do not run repository queries or contain multi-step business rules.
+- Add a Drizzle transaction only when multiple writes must succeed or fail together.
+- Do not add Redux, Zustand, Axios, tRPC, Prisma, GraphQL, or another HTTP framework.
+- Prefer Server Components. Add `"use client"` only for hooks, browser APIs, events, or client libraries.

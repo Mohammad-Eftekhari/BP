@@ -1,0 +1,11 @@
+---
+description: Dependency addition policy
+alwaysApply: true
+---
+
+Before adding a dependency, confirm Next.js, React, TanStack Query, Zod, Better Auth, Drizzle, or a small local function cannot provide the behavior.
+
+- Check the current official docs and compatibility with the installed Next.js and React versions.
+- Add the smallest maintained package that solves the problem.
+- Do not install a second library for the same job.
+- Update `docs/` when a package changes an architectural boundary.

@@ -1,0 +1,11 @@
+---
+description: Database and migration rules
+alwaysApply: true
+---
+
+- Schema changes go through `pnpm db:generate` and committed SQL in `drizzle/`.
+- `pnpm db:push` is local convenience only. Do not document it as the production migration path.
+- Primary keys, foreign keys, unique constraints, and non-null columns belong in the database when they are invariants.
+- Profile and future feature tables use `user.id` as a foreign key with `on delete cascade` when the row cannot outlive the account.
+- `pnpm db:reset` must keep the localhost guard in `src/db/local-database.ts`.
+- Tests that need PostgreSQL use `DATABASE_URL_TEST` and the `app_test` database.

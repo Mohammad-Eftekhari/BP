@@ -1,0 +1,12 @@
+---
+description: Authentication and authorization rules
+alwaysApply: true
+---
+
+- Authentication lives in `src/lib/auth`. Do not parse session cookies in feature code.
+- Pages that require an account call `requireUser()` or `requireAnonymous()`.
+- Route Handlers that require an account call `requireAuth()`. Role checks call `requireRole()`.
+- Hiding a button is not authorization. Every protected Route Handler checks the session on the server.
+- Registration must not accept a role. New accounts receive `user`.
+- Do not add a second auth library or a custom JWT session.
+- Do not log passwords, tokens, cookies, or raw authorization headers.

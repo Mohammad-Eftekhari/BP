@@ -1,0 +1,10 @@
+---
+description: Testing expectations
+alwaysApply: true
+---
+
+- Put unit tests next to the module as `*.test.ts` or `*.test.tsx`.
+- Put browser journeys in `tests/e2e`.
+- Cover validation, access denial, and the register, private page, profile, and sign-out path when those behaviors change.
+- Do not skip or weaken a failing test to make CI pass.
+- Pre-commit runs lint-staged only. The full suite stays in CI.

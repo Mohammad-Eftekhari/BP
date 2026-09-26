@@ -1,0 +1,12 @@
+---
+description: Naming conventions
+alwaysApply: true
+---
+
+- Route segments are kebab-case. Next.js special files keep their required names.
+- Components are PascalCase. Hooks start with `use`.
+- Booleans start with `is`, `has`, `can`, or `should`. Functions start with a verb.
+- Props interfaces use an `I` prefix only when a named interface is clearer than an inline type. Domain types use a `T` prefix.
+- Use `E` prefixes for const objects that model a closed set, such as `EAppRoutes` and `EUserRole`.
+- App paths live in `EAppRoutes`. API paths live in `EApiRoutes`. Do not hard-code those strings in components or hooks.
+- Style modules are named `Component.style.ts` when a component's styles leave the JSX.

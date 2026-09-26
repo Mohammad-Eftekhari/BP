@@ -1,0 +1,11 @@
+---
+description: API, validation, and server-state rules
+alwaysApply: true
+---
+
+- JSON success bodies use `{ success: true, data }`. Error bodies use `{ success: false, error: { code, message, details? } }`.
+- Throw `AppError` for expected failures. Let `handleRoute` map `ZodError` and unexpected errors.
+- Validate every request body with Zod inside the Route Handler, even when the form already validates.
+- Client server-state uses TanStack Query. Query keys live next to the feature. Do not copy API data into a global store.
+- Feature API functions call `apiFetch` with a Zod response schema.
+- Do not expose stack traces, SQL, or secrets in HTTP responses.
