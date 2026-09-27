@@ -1,22 +1,10 @@
 import { z } from "zod";
 
-const displayNameSchema = z
-  .string()
-  .trim()
-  .min(1, "Display name is required")
-  .max(80, "Display name must be at most 80 characters");
+import { en } from "@/lib/i18n/en";
+import { createProfileFormSchema, createProfileRequestSchema } from "@/lib/i18n/schemas";
 
-const bioSchema = z.string().trim().max(280, "Biography must be at most 280 characters");
-
-export const profileFormSchema = z.object({
-  displayName: displayNameSchema,
-  bio: bioSchema,
-});
-
-export const profileRequestSchema = z.object({
-  displayName: displayNameSchema,
-  bio: bioSchema.optional().transform((value) => value ?? ""),
-});
+export const profileFormSchema = createProfileFormSchema(en.validation);
+export const profileRequestSchema = createProfileRequestSchema(en.validation);
 
 export const profileResponseSchema = z.object({
   displayName: z.string(),

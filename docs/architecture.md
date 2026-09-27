@@ -46,7 +46,7 @@ Call `db.transaction` when two or more writes must commit together. A single pro
 
 ## Internationalization
 
-The interface language is `en` or `fa`, stored in the `locale` cookie. Persian sets `lang="fa"` and `dir="rtl"` on the document. English stays left-to-right. There is no translation catalog yet; strings stay in the components until a specification asks for a translation library.
+The interface language is `en` or `fa`, stored in the `locale` cookie. Persian sets `lang="fa"` and `dir="rtl"` on the document. English stays left-to-right. Visible copy lives in `src/lib/i18n/en.ts` and `src/lib/i18n/fa.ts`. `getDictionary(locale)` returns the active catalog. Add a language by extending `ELocale`, adding a dictionary with the same shape, and registering it in `getDictionary`. Do not add a translation framework until a specification requires it.
 
 UI text uses the Vazirmatn variable font in `src/fonts/Vazirmatn-wght.woff2`, loaded with `next/font/local` from `src/app/fonts.ts`. Replace that file to change the typeface. Geist Sans remains the fallback, and Geist Mono stays the monospace font.
 

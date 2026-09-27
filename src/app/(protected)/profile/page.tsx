@@ -2,23 +2,27 @@ import type { Metadata } from "next";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ProfileEditor } from "@/features/profile/components/ProfileEditor";
+import { getLocale } from "@/lib/get-locale";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
 
-export const metadata: Metadata = {
-  title: "Profile",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const copy = getDictionary(await getLocale());
+  return { title: copy.profile.title };
+}
 
-export default function ProfilePage() {
+export default async function ProfilePage() {
+  const locale = await getLocale();
+  const copy = getDictionary(locale);
+
   return (
     <Card className="mx-auto w-full max-w-xl">
       <CardHeader>
-        <CardTitle>Profile</CardTitle>
-        <CardDescription>
-          This reference feature saves a display name and biography for the signed-in account.
-        </CardDescription>
+        <CardTitle>{copy.profile.title}</CardTitle>
+        <CardDescription>{copy.profile.description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <h1 className="sr-only">Profile</h1>
-        <ProfileEditor />
+        <h1 className="sr-only">{copy.profile.title}</h1>
+        <ProfileEditor key={locale} copy={copy} />
       </CardContent>
     </Card>
   );

@@ -2,19 +2,27 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { EAppRoutes } from "@/constants/routes";
-import { signUpSchema, type TSignUpValues } from "@/features/auth/schemas/sign-up.schema";
+import type { TSignUpValues } from "@/features/auth/schemas/sign-up.schema";
 import { authClient } from "@/lib/auth/auth-client";
+import type { TDictionary } from "@/lib/i18n/en";
+import { createSignUpSchema } from "@/lib/i18n/schemas";
 
-export function SignUpForm() {
+type TSignUpFormProps = {
+  copy: TDictionary;
+};
+
+export function SignUpForm({ copy }: TSignUpFormProps) {
   const router = useRouter();
+  const schema = useMemo(() => createSignUpSchema(copy.validation), [copy.validation]);
   const form = useForm<TSignUpValues>({
-    resolver: zodResolver(signUpSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       name: "",
       email: "",
@@ -32,10 +40,7 @@ export function SignUpForm() {
 
     if (error) {
       form.setError("root", {
-        message:
-          error.status === 429
-            ? "Too many attempts. Wait a moment and try again."
-            : "Could not create an account with those details.",
+        message: error.status === 429 ? copy.signUp.rateLimited : copy.signUp.failed,
       });
       return;
     }
@@ -54,7 +59,7 @@ export function SignUpForm() {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="sign-up-name">Name</FieldLabel>
+              <FieldLabel htmlFor="sign-up-name">{copy.signUp.name}</FieldLabel>
               <Input
                 {...field}
                 id="sign-up-name"
@@ -70,7 +75,7 @@ export function SignUpForm() {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="sign-up-email">Email</FieldLabel>
+              <FieldLabel htmlFor="sign-up-email">{copy.signUp.email}</FieldLabel>
               <Input
                 {...field}
                 id="sign-up-email"
@@ -87,7 +92,7 @@ export function SignUpForm() {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="sign-up-password">Password</FieldLabel>
+              <FieldLabel htmlFor="sign-up-password">{copy.signUp.password}</FieldLabel>
               <Input
                 {...field}
                 id="sign-up-password"
@@ -104,7 +109,9 @@ export function SignUpForm() {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="sign-up-confirm-password">Confirm password</FieldLabel>
+              <FieldLabel htmlFor="sign-up-confirm-password">
+                {copy.signUp.confirmPassword}
+              </FieldLabel>
               <Input
                 {...field}
                 id="sign-up-confirm-password"
@@ -122,7 +129,7 @@ export function SignUpForm() {
           </p>
         ) : null}
         <Button type="submit" disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting ? "Creating account..." : "Create account"}
+          {form.formState.isSubmitting ? copy.signUp.submitting : copy.signUp.submit}
         </Button>
       </FieldGroup>
     </form>

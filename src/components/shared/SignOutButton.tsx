@@ -6,7 +6,11 @@ import { Button } from "@/components/ui/button";
 import { EAppRoutes } from "@/constants/routes";
 import { authClient } from "@/lib/auth/auth-client";
 
-export function SignOutButton() {
+type TSignOutButtonProps = {
+  label: string;
+};
+
+export function SignOutButton({ label }: TSignOutButtonProps) {
   const router = useRouter();
 
   async function handleSignOut() {
@@ -17,7 +21,7 @@ export function SignOutButton() {
 
   return (
     <Button type="button" variant="outline" onClick={handleSignOut}>
-      Sign out
+      {label}
     </Button>
   );
 }

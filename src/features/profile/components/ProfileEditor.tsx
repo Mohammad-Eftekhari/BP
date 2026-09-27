@@ -9,8 +9,13 @@ import { ProfileForm } from "@/features/profile/components/ProfileForm";
 import { profileQueryKeys } from "@/features/profile/queries/profile-keys";
 import { profileResponseSchema } from "@/features/profile/schemas/profile.schema";
 import { apiFetch } from "@/lib/api/client";
+import type { TDictionary } from "@/lib/i18n/en";
 
-export function ProfileEditor() {
+type TProfileEditorProps = {
+  copy: TDictionary;
+};
+
+export function ProfileEditor({ copy }: TProfileEditorProps) {
   const profileQuery = useQuery({
     queryKey: profileQueryKeys.current,
     queryFn: () => apiFetch(EApiRoutes.profile, profileResponseSchema),
@@ -28,13 +33,13 @@ export function ProfileEditor() {
   if (profileQuery.isError) {
     return (
       <div className="flex flex-col items-start gap-3">
-        <p role="alert">The profile could not be loaded.</p>
+        <p role="alert">{copy.profile.loadError}</p>
         <Button type="button" variant="outline" onClick={() => profileQuery.refetch()}>
-          Try again
+          {copy.profile.tryAgain}
         </Button>
       </div>
     );
   }
 
-  return <ProfileForm initialProfile={profileQuery.data} />;
+  return <ProfileForm copy={copy} initialProfile={profileQuery.data} />;
 }

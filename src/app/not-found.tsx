@@ -2,15 +2,19 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { EAppRoutes } from "@/constants/routes";
+import { getLocale } from "@/lib/get-locale";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
 
-export default function NotFound() {
+export default async function NotFound() {
+  const copy = getDictionary(await getLocale());
+
   return (
     <section className="flex max-w-lg flex-col gap-4">
-      <h1 className="text-2xl font-semibold">Page not found</h1>
-      <p className="text-muted-foreground">That address is not part of this application.</p>
+      <h1 className="text-2xl font-semibold">{copy.notFound.title}</h1>
+      <p className="text-muted-foreground">{copy.notFound.description}</p>
       <div>
         <Button asChild>
-          <Link href={EAppRoutes.home}>Back to home</Link>
+          <Link href={EAppRoutes.home}>{copy.notFound.home}</Link>
         </Button>
       </div>
     </section>

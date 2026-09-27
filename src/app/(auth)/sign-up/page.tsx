@@ -4,25 +4,31 @@ import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { EAppRoutes } from "@/constants/routes";
 import { SignUpForm } from "@/features/auth/components/SignUpForm";
+import { getLocale } from "@/lib/get-locale";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
 
-export const metadata: Metadata = {
-  title: "Create account",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const copy = getDictionary(await getLocale());
+  return { title: copy.signUp.title };
+}
 
-export default function SignUpPage() {
+export default async function SignUpPage() {
+  const locale = await getLocale();
+  const copy = getDictionary(locale);
+
   return (
     <Card className="mx-auto w-full max-w-md">
       <CardHeader>
-        <CardTitle>Create account</CardTitle>
-        <CardDescription>Choose a name, email, and password.</CardDescription>
+        <CardTitle>{copy.signUp.title}</CardTitle>
+        <CardDescription>{copy.signUp.description}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <h1 className="sr-only">Create account</h1>
-        <SignUpForm />
+        <h1 className="sr-only">{copy.signUp.title}</h1>
+        <SignUpForm key={locale} copy={copy} />
         <p className="text-sm text-muted-foreground">
-          Already have an account?{" "}
+          {copy.signUp.prompt}{" "}
           <Link href={EAppRoutes.signIn} className="underline-offset-4 hover:underline">
-            Sign in
+            {copy.signUp.alternate}
           </Link>
         </p>
       </CardContent>

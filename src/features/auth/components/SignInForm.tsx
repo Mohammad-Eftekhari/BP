@@ -2,24 +2,29 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { EAppRoutes } from "@/constants/routes";
-import { signInSchema, type TSignInValues } from "@/features/auth/schemas/sign-in.schema";
+import type { TSignInValues } from "@/features/auth/schemas/sign-in.schema";
 import { authClient } from "@/lib/auth/auth-client";
+import type { TDictionary } from "@/lib/i18n/en";
+import { createSignInSchema } from "@/lib/i18n/schemas";
 import { getSafeNextPath } from "@/utils/get-safe-next-path";
 
 type TSignInFormProps = {
+  copy: TDictionary;
   nextPath?: string | null;
 };
 
-export function SignInForm({ nextPath }: TSignInFormProps) {
+export function SignInForm({ copy, nextPath }: TSignInFormProps) {
   const router = useRouter();
+  const schema = useMemo(() => createSignInSchema(copy.validation), [copy.validation]);
   const form = useForm<TSignInValues>({
-    resolver: zodResolver(signInSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       email: "",
       password: "",
@@ -34,10 +39,7 @@ export function SignInForm({ nextPath }: TSignInFormProps) {
 
     if (error) {
       form.setError("root", {
-        message:
-          error.status === 429
-            ? "Too many attempts. Wait a moment and try again."
-            : "Email or password is incorrect.",
+        message: error.status === 429 ? copy.signIn.rateLimited : copy.signIn.invalidCredentials,
       });
       return;
     }
@@ -56,7 +58,7 @@ export function SignInForm({ nextPath }: TSignInFormProps) {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="sign-in-email">Email</FieldLabel>
+              <FieldLabel htmlFor="sign-in-email">{copy.signIn.email}</FieldLabel>
               <Input
                 {...field}
                 id="sign-in-email"
@@ -73,7 +75,7 @@ export function SignInForm({ nextPath }: TSignInFormProps) {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="sign-in-password">Password</FieldLabel>
+              <FieldLabel htmlFor="sign-in-password">{copy.signIn.password}</FieldLabel>
               <Input
                 {...field}
                 id="sign-in-password"
@@ -91,7 +93,7 @@ export function SignInForm({ nextPath }: TSignInFormProps) {
           </p>
         ) : null}
         <Button type="submit" disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting ? "Signing in..." : "Sign in"}
+          {form.formState.isSubmitting ? copy.signIn.submitting : copy.signIn.submit}
         </Button>
       </FieldGroup>
     </form>

@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -12,21 +13,24 @@ import { Textarea } from "@/components/ui/textarea";
 import { EApiRoutes } from "@/constants/routes";
 import { profileQueryKeys } from "@/features/profile/queries/profile-keys";
 import {
-  profileFormSchema,
   profileResponseSchema,
   type TProfile,
   type TProfileValues,
 } from "@/features/profile/schemas/profile.schema";
 import { ApiClientError, apiFetch } from "@/lib/api/client";
+import type { TDictionary } from "@/lib/i18n/en";
+import { createProfileFormSchema } from "@/lib/i18n/schemas";
 
 type TProfileFormProps = {
+  copy: TDictionary;
   initialProfile: TProfile;
 };
 
-export function ProfileForm({ initialProfile }: TProfileFormProps) {
+export function ProfileForm({ copy, initialProfile }: TProfileFormProps) {
   const queryClient = useQueryClient();
+  const schema = useMemo(() => createProfileFormSchema(copy.validation), [copy.validation]);
   const form = useForm<TProfileValues>({
-    resolver: zodResolver(profileFormSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       displayName: initialProfile.displayName,
       bio: initialProfile.bio,
@@ -42,11 +46,10 @@ export function ProfileForm({ initialProfile }: TProfileFormProps) {
     onSuccess: async (profile) => {
       queryClient.setQueryData(profileQueryKeys.current, profile);
       form.reset({ displayName: profile.displayName, bio: profile.bio });
-      toast.success("Profile saved");
+      toast.success(copy.profile.saved);
     },
     onError: (error) => {
-      const message =
-        error instanceof ApiClientError ? error.message : "Could not save the profile.";
+      const message = error instanceof ApiClientError ? error.message : copy.profile.saveError;
       form.setError("root", { message });
     },
   });
@@ -62,7 +65,7 @@ export function ProfileForm({ initialProfile }: TProfileFormProps) {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="profile-display-name">Display name</FieldLabel>
+              <FieldLabel htmlFor="profile-display-name">{copy.profile.displayName}</FieldLabel>
               <Input
                 {...field}
                 id="profile-display-name"
@@ -78,7 +81,7 @@ export function ProfileForm({ initialProfile }: TProfileFormProps) {
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="profile-bio">Biography</FieldLabel>
+              <FieldLabel htmlFor="profile-bio">{copy.profile.biography}</FieldLabel>
               <Textarea {...field} id="profile-bio" aria-invalid={fieldState.invalid} />
               <FieldError errors={[fieldState.error]} />
             </Field>
@@ -90,7 +93,7 @@ export function ProfileForm({ initialProfile }: TProfileFormProps) {
           </p>
         ) : null}
         <Button type="submit" disabled={isSaving}>
-          {isSaving ? "Saving..." : "Save profile"}
+          {isSaving ? copy.profile.saving : copy.profile.save}
         </Button>
       </FieldGroup>
     </form>

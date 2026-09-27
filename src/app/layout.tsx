@@ -6,7 +6,7 @@ import { AppProviders } from "@/components/shared/AppProviders";
 import { SiteHeader } from "@/components/shared/SiteHeader";
 import { getLocale } from "@/lib/get-locale";
 import { directionForLocale } from "@/lib/locale";
-import { rootMetadata } from "@/lib/metadata";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { themeInitScript } from "@/lib/theme-script";
 
 import { vazirmatn } from "./fonts";
@@ -22,7 +22,21 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = rootMetadata;
+export async function generateMetadata(): Promise<Metadata> {
+  const copy = getDictionary(await getLocale());
+
+  return {
+    title: {
+      default: copy.siteName,
+      template: `%s · ${copy.siteName}`,
+    },
+    description: copy.siteDescription,
+    robots: {
+      index: true,
+      follow: true,
+    },
+  };
+}
 
 type TRootLayoutProps = {
   children: ReactNode;

@@ -5,7 +5,11 @@ import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
 
-export function ThemeToggle() {
+type TThemeToggleProps = {
+  label: string;
+};
+
+export function ThemeToggle({ label }: TThemeToggleProps) {
   const { setTheme } = useTheme();
 
   return (
@@ -13,7 +17,7 @@ export function ThemeToggle() {
       type="button"
       variant="outline"
       size="icon"
-      aria-label="Toggle color theme"
+      aria-label={label}
       onClick={() => {
         const isDark = document.documentElement.classList.contains("dark");
         setTheme(isDark ? "light" : "dark");
