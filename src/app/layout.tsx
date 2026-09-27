@@ -4,9 +4,12 @@ import type { ReactNode } from "react";
 
 import { AppProviders } from "@/components/shared/AppProviders";
 import { SiteHeader } from "@/components/shared/SiteHeader";
+import { getLocale } from "@/lib/get-locale";
+import { directionForLocale } from "@/lib/locale";
 import { rootMetadata } from "@/lib/metadata";
 import { themeInitScript } from "@/lib/theme-script";
 
+import { vazirmatn } from "./fonts";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -25,13 +28,15 @@ type TRootLayoutProps = {
   children: ReactNode;
 };
 
-export default function RootLayout({ children }: TRootLayoutProps) {
+export default async function RootLayout({ children }: TRootLayoutProps) {
+  const locale = await getLocale();
+
   return (
     <html
-      lang="en"
-      dir="ltr"
+      lang={locale}
+      dir={directionForLocale(locale)}
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${vazirmatn.variable} ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />

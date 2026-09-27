@@ -46,7 +46,9 @@ Call `db.transaction` when two or more writes must commit together. A single pro
 
 ## Internationalization
 
-Copy is English. Layouts use a document direction of `ltr` today and avoid baking product language into the architecture. A later translation pass can extract the strings in features and pages. Do not add a translation framework until a specification requires it.
+The interface language is `en` or `fa`, stored in the `locale` cookie. Persian sets `lang="fa"` and `dir="rtl"` on the document. English stays left-to-right. There is no translation catalog yet; strings stay in the components until a specification asks for a translation library.
+
+UI text uses the Vazirmatn variable font in `src/fonts/Vazirmatn-wght.woff2`, loaded with `next/font/local` from `src/app/fonts.ts`. Replace that file to change the typeface. Geist Sans remains the fallback, and Geist Mono stays the monospace font.
 
 ## Reference profile
 

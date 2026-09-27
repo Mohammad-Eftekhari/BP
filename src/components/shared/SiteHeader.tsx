@@ -1,12 +1,14 @@
 import Link from "next/link";
 
+import { LanguageToggle } from "@/components/shared/LanguageToggle";
 import { SignOutButton } from "@/components/shared/SignOutButton";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { EAppRoutes } from "@/constants/routes";
 import { getCurrentUser } from "@/lib/auth/server";
+import { getLocale } from "@/lib/get-locale";
 
 export async function SiteHeader() {
-  const user = await getCurrentUser();
+  const [user, locale] = await Promise.all([getCurrentUser(), getLocale()]);
 
   return (
     <header className="border-b">
@@ -15,6 +17,7 @@ export async function SiteHeader() {
           Application starter
         </Link>
         <nav className="flex items-center gap-2" aria-label="Account">
+          <LanguageToggle locale={locale} />
           <ThemeToggle />
           {user ? (
             <>
