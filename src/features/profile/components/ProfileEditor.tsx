@@ -1,24 +1,22 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EApiRoutes } from "@/constants/routes";
 import { ProfileForm } from "@/features/profile/components/ProfileForm";
-import { profileQueryKeys } from "@/features/profile/queries/profile-keys";
 import { profileResponseSchema } from "@/features/profile/schemas/profile.schema";
-import { apiFetch } from "@/lib/api/client";
 import type { TDictionary } from "@/lib/i18n/en";
+import { useFetcher } from "@/lib/query";
 
 type TProfileEditorProps = {
   copy: TDictionary;
 };
 
 export function ProfileEditor({ copy }: TProfileEditorProps) {
-  const profileQuery = useQuery({
-    queryKey: profileQueryKeys.current,
-    queryFn: () => apiFetch(EApiRoutes.profile, profileResponseSchema),
+  const profileQuery = useFetcher({
+    url: EApiRoutes.profile,
+    schema: profileResponseSchema,
+    enabled: true,
   });
 
   if (profileQuery.isPending) {

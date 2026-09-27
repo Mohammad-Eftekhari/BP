@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -17,9 +16,10 @@ import {
   type TProfile,
   type TProfileValues,
 } from "@/features/profile/schemas/profile.schema";
-import { ApiClientError, apiFetch } from "@/lib/api/client";
+import { ApiClientError } from "@/lib/api/client";
 import type { TDictionary } from "@/lib/i18n/en";
 import { createProfileFormSchema } from "@/lib/i18n/schemas";
+import { useSender } from "@/lib/query";
 
 type TProfileFormProps = {
   copy: TDictionary;
@@ -27,7 +27,6 @@ type TProfileFormProps = {
 };
 
 export function ProfileForm({ copy, initialProfile }: TProfileFormProps) {
-  const queryClient = useQueryClient();
   const schema = useMemo(() => createProfileFormSchema(copy.validation), [copy.validation]);
   const form = useForm<TProfileValues>({
     resolver: zodResolver(schema),
@@ -37,28 +36,33 @@ export function ProfileForm({ copy, initialProfile }: TProfileFormProps) {
     },
   });
 
-  const mutation = useMutation({
-    mutationFn: (values: TProfileValues) =>
-      apiFetch(EApiRoutes.profile, profileResponseSchema, {
-        method: "PUT",
-        body: JSON.stringify(values),
-      }),
-    onSuccess: async (profile) => {
-      queryClient.setQueryData(profileQueryKeys.current, profile);
-      form.reset({ displayName: profile.displayName, bio: profile.bio });
-      toast.success(copy.profile.saved);
-    },
-    onError: (error) => {
-      const message = error instanceof ApiClientError ? error.message : copy.profile.saveError;
-      form.setError("root", { message });
-    },
+  const mutation = useSender<TProfile, TProfileValues>({
+    url: EApiRoutes.profile,
+    method: "PUT",
+    schema: profileResponseSchema,
+    invalidateKeys: [profileQueryKeys.current],
   });
 
   const rootError = form.formState.errors.root?.message;
   const isSaving = form.formState.isSubmitting || mutation.isPending;
 
   return (
-    <form onSubmit={form.handleSubmit((values) => mutation.mutateAsync(values))} noValidate>
+    <form
+      onSubmit={form.handleSubmit((values) =>
+        mutation.mutate(values, {
+          onSuccess: (profile) => {
+            form.reset({ displayName: profile.displayName, bio: profile.bio });
+            toast.success(copy.profile.saved);
+          },
+          onError: (error) => {
+            const message =
+              error instanceof ApiClientError ? error.message : copy.profile.saveError;
+            form.setError("root", { message });
+          },
+        }),
+      )}
+      noValidate
+    >
       <FieldGroup>
         <Controller
           name="displayName"

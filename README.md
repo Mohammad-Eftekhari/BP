@@ -173,9 +173,29 @@ Use `db.transaction` only when several writes must succeed or fail together.
 1. Add the path to `EApiRoutes`.
 2. Create `src/app/api/.../route.ts`.
 3. Call `requireAuth()` or `requireRole()`.
-4. Parse the body with Zod.
+4. Parse the body or list query with Zod. List endpoints use `listQuerySchema` and `toLimitOffset` from `src/lib/api/pagination.ts`.
 5. Call a service and return `jsonSuccess`.
-6. Throw `AppError` for expected failures. `handleRoute` maps unexpected errors to a safe response.
+6. A single-object service returns the record or throws `AppError("NOT_FOUND", "...")`. A list service returns `{ items, page, pageSize, total }`.
+7. `handleRoute` maps `AppError` and unexpected errors to the shared error envelope.
+
+On the client, read with `useFetcher` and write with `useSender` from `src/lib/query`. Pass `enabled: true` when the screen should render its own loading and error states. Omit `enabled` only when the screen is wrapped in Suspense.
+
+```tsx
+const profile = useFetcher({
+  url: EApiRoutes.profile,
+  schema: profileResponseSchema,
+  enabled: true,
+});
+
+const save = useSender({
+  url: EApiRoutes.profile,
+  method: "PUT",
+  schema: profileResponseSchema,
+  invalidateKeys: [profileQueryKeys.current],
+});
+```
+
+`GET /api/profile` is the single-object example. It is not paginated. For a list endpoint, pass `params: { page: 1, pageSize: 20 }` so each page has its own query key.
 
 ## How to add a protected page
 
