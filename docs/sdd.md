@@ -40,8 +40,7 @@ Run that only when you intend to refresh Spec Kit files. Review the diff afterwa
 2. Specify the behavior.
 3. Plan and list tasks.
 4. Implement a small group of tasks.
-5. Run `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build`.
-6. Add or update a Playwright test when the user journey changed.
-7. Open a pull request.
+5. Run `pnpm lint`, `pnpm typecheck`, and `pnpm build`.
+6. Open a pull request.
 
 Split a feature into several specifications only when one specify → plan → tasks cycle is too large to review.

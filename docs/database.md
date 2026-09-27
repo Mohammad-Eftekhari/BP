@@ -47,4 +47,4 @@ Use this when both writes must commit together. The profile save is one upsert a
 
 ## Test database
 
-`pnpm db:create-test` creates `app_test` on the same PostgreSQL server as `DATABASE_URL`. `pnpm db:migrate:test` applies migrations there. Playwright uses that database and leaves the database named in `DATABASE_URL` alone.
+`pnpm db:create-test` creates `app_test` on the same PostgreSQL server as `DATABASE_URL`. `pnpm db:migrate:test` applies migrations there. Those commands are optional and are not part of CI. They leave the database named in `DATABASE_URL` alone.

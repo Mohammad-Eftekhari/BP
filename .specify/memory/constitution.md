@@ -65,13 +65,14 @@ fetch server data in arbitrary `useEffect` blocks when a query or mutation is th
 right tool. Do not add Redux, Zustand, Axios, GraphQL, tRPC, Prisma, or another
 backend framework unless a later specification explicitly justifies it.
 
-### VIII. Tests Are Part of the Feature
+### VIII. This Starter Does Not Ship a Test Suite
 
-A feature is incomplete when its critical behavior is not testable. Meaningful
-features MUST include unit or integration tests for important logic and end-to-end
-coverage for important user flows. Tests that need PostgreSQL MUST use a dedicated
-test database and MUST NOT reset a developer's normal database without an explicit
-opt-in. CI is authoritative. Pre-commit hooks MUST stay fast.
+This boilerplate does not include unit tests or end-to-end tests. A feature is not
+incomplete solely because it has no test file. Critical behavior MUST remain
+understandable enough to check by using the application. Quality checks are
+`pnpm lint`, `pnpm typecheck`, and `pnpm build`. Pre-commit hooks MUST stay fast.
+Do not add Vitest, Playwright, or another test runner unless a later specification
+requires it.
 
 ### IX. AI-Friendly, Incrementally Evolvable Repository
 
@@ -96,8 +97,7 @@ that solves the problem.
 
 The stack is Next.js, React, TypeScript, pnpm, Tailwind CSS, shadcn/ui, TanStack
 Query, React Hook Form, Zod, Better Auth, Drizzle ORM, and PostgreSQL. Tooling is
-ESLint, Prettier, Vitest, React Testing Library, Playwright, Docker, and GitHub
-Actions. Application HTTP calls use the native `fetch` wrapper in `src/lib/api`.
+ESLint, Prettier, Docker, and GitHub Actions. Application HTTP calls use the native `fetch` wrapper in `src/lib/api`.
 
 Import alias `@/*` maps to `src/*`. Feature UI lives in `src/features/<feature>`.
 Server business logic lives in `src/server/services`. Persistence lives in
@@ -129,14 +129,13 @@ Meaningful features follow Spec-Driven Development:
 5. Generate tasks (`/speckit-tasks`).
 6. Analyze consistency before implementation (`/speckit-analyze`).
 7. Implement small task groups (`/speckit-implement`).
-8. Run lint, typecheck, tests, and build as appropriate.
+8. Run lint, typecheck, and build as appropriate.
 9. Converge remaining gaps (`/speckit-converge`).
 10. Commit and open a pull request.
 
 Trivial fixes do not require the full workflow. A feature that is too large for one
 specify → plan → tasks cycle MAY be split into a spec of specs. Quality gates are
-`pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build`. End-to-end tests and
-database migration checks run when the change touches those paths. Destructive
+`pnpm lint`, `pnpm typecheck`, and `pnpm build`. Destructive
 database commands MUST NOT be easy to run against production.
 
 Runtime development guidance lives in `docs/` and `.cursor/rules/`. Those documents
@@ -153,9 +152,9 @@ materially expanded. PATCH means wording was clarified without changing the rule
 
 Pull requests and agent reviews MUST check the change against the principles it
 touches: server/client boundaries, validation, auth and authorization, persistence,
-tests, and dependency additions. Complexity beyond this constitution MUST be
+and dependency additions. Complexity beyond this constitution MUST be
 justified in the specification. Compliance is reviewed at plan time and again
 before merge. The specification remains the behavioral contract. This constitution
 remains the governance contract.
 
-**Version**: 1.0.0 | **Ratified**: 2026-09-26 | **Last Amended**: 2026-09-26
+**Version**: 2.0.0 | **Ratified**: 2026-09-26 | **Last Amended**: 2026-09-27

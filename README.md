@@ -1,6 +1,6 @@
 # Application starter
 
-A reusable Next.js modular monolith for future web applications. It includes the interface, English and Persian copy with right-to-left layout, Route Handlers, email and password accounts, PostgreSQL, a reference profile, tests, Docker, and a Spec Kit workflow for Cursor.
+A reusable Next.js modular monolith for future web applications. It includes the interface, English and Persian copy with right-to-left layout, Route Handlers, email and password accounts, PostgreSQL, a reference profile, Docker, and a Spec Kit workflow for Cursor. This starter does not include a test suite.
 
 ## Architecture
 
@@ -42,14 +42,14 @@ Generate a real `BETTER_AUTH_SECRET` before sharing an environment. `openssl ran
 
 ## Environment variables
 
-| Variable                                                             | Who reads it   | Purpose                       |
-| -------------------------------------------------------------------- | -------------- | ----------------------------- |
-| `DATABASE_URL`                                                       | server         | PostgreSQL connection string  |
-| `DATABASE_URL_TEST`                                                  | tests          | Dedicated test database       |
-| `BETTER_AUTH_SECRET`                                                 | server         | Session encryption secret     |
-| `BETTER_AUTH_URL`                                                    | server         | Public base URL of this app   |
-| `BETTER_AUTH_TRUSTED_ORIGINS`                                        | server         | Comma-separated extra origins |
-| `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `POSTGRES_PORT` | Docker Compose | Local database container      |
+| Variable                                                             | Who reads it                    | Purpose                                      |
+| -------------------------------------------------------------------- | ------------------------------- | -------------------------------------------- |
+| `DATABASE_URL`                                                       | server                          | PostgreSQL connection string                 |
+| `DATABASE_URL_TEST`                                                  | optional local database scripts | Separate database for `pnpm db:migrate:test` |
+| `BETTER_AUTH_SECRET`                                                 | server                          | Session encryption secret                    |
+| `BETTER_AUTH_URL`                                                    | server                          | Public base URL of this app                  |
+| `BETTER_AUTH_TRUSTED_ORIGINS`                                        | server                          | Comma-separated extra origins                |
+| `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `POSTGRES_PORT` | Docker Compose                  | Local database container                     |
 
 Never put secrets in `NEXT_PUBLIC_*` variables. `.env` is gitignored. `.env.example` contains placeholders only.
 
@@ -108,28 +108,6 @@ pnpm db:reset      # drop the local public schema and migrate again
 
 Committed files in `drizzle/` are the source of truth for deployed databases. Details: [docs/database.md](docs/database.md).
 
-## Running tests
-
-```bash
-pnpm lint
-pnpm format:check
-pnpm typecheck
-pnpm test
-```
-
-## Running end-to-end tests
-
-```bash
-pnpm db:create-test
-pnpm db:migrate:test
-pnpm test:e2e
-pnpm test:e2e:ui
-```
-
-Local runs use the Google Chrome already installed on the machine. CI installs Playwright's Chromium. If neither is available, install a browser with `pnpm exec playwright install chromium`.
-
-`test:e2e` points `DATABASE_URL` at `DATABASE_URL_TEST` for the Playwright process. It does not reset your normal database. Locally the script reads `.env` when that file exists. In CI, `DATABASE_URL_TEST` is already set in the workflow, so no `.env` file is required.
-
 ## Build and deploy
 
 ```bash
@@ -178,7 +156,7 @@ Details: [docs/sdd.md](docs/sdd.md).
 4. Add UI under `src/features/<feature>`.
 5. Add server logic under `src/server/services/<feature>` and `src/server/repositories/<feature>`.
 6. Add a thin Route Handler under `src/app/api/<feature>`.
-7. Run `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build`.
+7. Run `pnpm lint`, `pnpm typecheck`, and `pnpm build`.
 
 ## How to add a database table
 
@@ -221,13 +199,9 @@ The header language button only toggles English and Persian. A third language ne
 2. Point `src/app/fonts.ts` at that file. For a variable font, set `weight` to the range the file contains, such as `"100 900"`.
 3. Keep the CSS variable `--font-vazirmatn`, or change `--font-sans` in `src/app/globals.css` if you introduce a new variable.
 
-## How to write tests
+## How to write checks
 
-- Unit tests live next to the code as `*.test.ts`.
-- Browser journeys live in `tests/e2e`.
-- Database tests use `app_test`.
-
-Details: [docs/testing.md](docs/testing.md).
+This starter does not ship unit tests or end-to-end tests. Check a change with `pnpm lint`, `pnpm typecheck`, and `pnpm build`. Details: [docs/testing.md](docs/testing.md).
 
 ## How to remove the reference profile
 
@@ -237,19 +211,17 @@ The profile feature is the sample vertical slice. To remove it from a product:
 2. Remove the profile links from the header and dashboard.
 3. Delete `src/db/schema/profile.ts` and its export.
 4. Generate a migration that drops the `profile` table.
-5. Remove the profile end-to-end steps, the profile schema unit test, and the profile strings in `src/lib/i18n/en.ts` and `src/lib/i18n/fa.ts`.
+5. Remove the profile strings in `src/lib/i18n/en.ts` and `src/lib/i18n/fa.ts`.
 6. Keep accounts, the dashboard, the language catalogs, and `GET /api/health`.
 
 ## Scripts
 
-| Script                               | What it does                |
-| ------------------------------------ | --------------------------- |
-| `pnpm dev`                           | Next.js development server  |
-| `pnpm build` / `pnpm start`          | Production build and server |
-| `pnpm lint` / `pnpm lint:fix`        | ESLint                      |
-| `pnpm format` / `pnpm format:check`  | Prettier                    |
-| `pnpm typecheck`                     | `tsc --noEmit`              |
-| `pnpm test` / `pnpm test:watch`      | Vitest                      |
-| `pnpm test:e2e` / `pnpm test:e2e:ui` | Playwright                  |
+| Script                              | What it does                |
+| ----------------------------------- | --------------------------- |
+| `pnpm dev`                          | Next.js development server  |
+| `pnpm build` / `pnpm start`         | Production build and server |
+| `pnpm lint` / `pnpm lint:fix`       | ESLint                      |
+| `pnpm format` / `pnpm format:check` | Prettier                    |
+| `pnpm typecheck`                    | `tsc --noEmit`              |
 
-Pre-commit runs Prettier and ESLint on staged files. CI runs format, lint, types, unit tests, migrations, the production build, and Playwright.
+Pre-commit runs Prettier and ESLint on staged files. CI runs format, lint, typecheck, and the production build.
