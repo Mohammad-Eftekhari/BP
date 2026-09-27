@@ -1,6 +1,6 @@
 # Application starter
 
-A reusable Next.js modular monolith for future web applications. It includes the interface, Route Handlers, email and password accounts, PostgreSQL, a reference profile, tests, Docker, and a Spec Kit workflow for Cursor.
+A reusable Next.js modular monolith for future web applications. It includes the interface, English and Persian copy with right-to-left layout, Route Handlers, email and password accounts, PostgreSQL, a reference profile, tests, Docker, and a Spec Kit workflow for Cursor.
 
 ## Architecture
 
@@ -14,8 +14,10 @@ Read [docs/architecture.md](docs/architecture.md) for the boundaries. Do not imp
 src/app            routes, layouts, and Route Handlers
 src/components/ui  shadcn/ui source components
 src/features       feature UI, schemas, and query hooks
+src/fonts          self-hosted font files
 src/server         services and repositories
 src/db             Drizzle client, schema, seed, and reset
+src/lib/i18n       English and Persian dictionaries
 src/lib            auth, API helpers, env, logging, and TanStack Query
 drizzle            committed SQL migrations
 specs              Spec Kit feature contracts
@@ -74,6 +76,23 @@ These passwords are local sample data. Do not reuse them in a deployed environme
 
 Details: [docs/authentication.md](docs/authentication.md).
 
+## Language and direction
+
+The header switches between English and Persian. The choice is stored in the `locale` cookie.
+
+| Locale | Document    | Direction     |
+| ------ | ----------- | ------------- |
+| `en`   | `lang="en"` | left to right |
+| `fa`   | `lang="fa"` | right to left |
+
+Visible copy is in `src/lib/i18n/en.ts` and `src/lib/i18n/fa.ts`. Pages and forms call `getDictionary(locale)`. Persian sets `dir="rtl"` through `directionForLocale`. There is no translation framework; add a language by copying the dictionary shape.
+
+## Fonts
+
+UI text uses the Vazirmatn variable font at `src/fonts/Vazirmatn-wght.woff2`. `src/app/fonts.ts` loads it with `next/font/local`. It covers Persian and Latin. Geist Sans is the fallback. Geist Mono stays the monospace font. The font license is `src/fonts/OFL.txt`.
+
+Replace `Vazirmatn-wght.woff2` to change the typeface, or add more files to the `src` array in `src/app/fonts.ts`. Use `.woff2` when you can. `next/font/local` also accepts `.woff`, `.ttf`, and `.otf`.
+
 ## Database migrations
 
 ```bash
@@ -109,7 +128,7 @@ pnpm test:e2e:ui
 
 Local runs use the Google Chrome already installed on the machine. CI installs Playwright's Chromium. If neither is available, install a browser with `pnpm exec playwright install chromium`.
 
-`test:e2e` points `DATABASE_URL` at `DATABASE_URL_TEST` for the Playwright process. It does not reset your normal database.
+`test:e2e` points `DATABASE_URL` at `DATABASE_URL_TEST` for the Playwright process. It does not reset your normal database. Locally the script reads `.env` when that file exists. In CI, `DATABASE_URL_TEST` is already set in the workflow, so no `.env` file is required.
 
 ## Build and deploy
 
@@ -187,6 +206,21 @@ Use `db.transaction` only when several writes must succeed or fail together.
 3. If the page needs a role, check it in the Server Component as well.
 4. Do not rely on `src/proxy.ts`. That file only looks for a session cookie.
 
+## How to add a language
+
+1. Add the locale code to `ELocale` in `src/lib/locale.ts`.
+2. Return `rtl` or `ltr` from `directionForLocale`.
+3. Add `src/lib/i18n/<locale>.ts` with the same shape as `en.ts`.
+4. Register it in `src/lib/i18n/get-dictionary.ts`.
+
+The header language button only toggles English and Persian. A third language needs its own control.
+
+## How to change the font
+
+1. Put the font file in `src/fonts/`. Prefer `.woff2`.
+2. Point `src/app/fonts.ts` at that file. For a variable font, set `weight` to the range the file contains, such as `"100 900"`.
+3. Keep the CSS variable `--font-vazirmatn`, or change `--font-sans` in `src/app/globals.css` if you introduce a new variable.
+
 ## How to write tests
 
 - Unit tests live next to the code as `*.test.ts`.
@@ -203,8 +237,8 @@ The profile feature is the sample vertical slice. To remove it from a product:
 2. Remove the profile links from the header and dashboard.
 3. Delete `src/db/schema/profile.ts` and its export.
 4. Generate a migration that drops the `profile` table.
-5. Remove the profile end-to-end steps and the profile schema unit test.
-6. Keep accounts, the dashboard, and `GET /api/health`.
+5. Remove the profile end-to-end steps, the profile schema unit test, and the profile strings in `src/lib/i18n/en.ts` and `src/lib/i18n/fa.ts`.
+6. Keep accounts, the dashboard, the language catalogs, and `GET /api/health`.
 
 ## Scripts
 
