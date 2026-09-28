@@ -6,7 +6,7 @@ A reusable Next.js modular monolith for future web applications. It includes the
 
 The browser talks to the Next.js App Router. Server Components render pages. Client Components use TanStack Query when they need client-side server state. Route Handlers validate input, check the session, and call a service. Services call repositories. Repositories use Drizzle. Drizzle talks to PostgreSQL.
 
-Read [docs/architecture.md](docs/architecture.md) for the boundaries. Do not import the database, repositories, or the Better Auth server config from a Client Component.
+Read [docs/architecture.md](docs/architecture.md) for the boundaries. Do not import the database, repositories, or the Better Auth server config from a Client Component. Security headers and the logging boundary are described in [docs/security.md](docs/security.md) and [docs/observability.md](docs/observability.md).
 
 ## Folder structure
 
