@@ -1,9 +1,9 @@
 export const en = {
-  siteName: "Application starter",
+  siteName: "Store",
   siteDescription: "A reusable starting point for a full-stack web application.",
   nav: {
     account: "Account",
-    home: "Application starter",
+    home: "Store",
     dashboard: "Dashboard",
     profile: "Profile",
     signIn: "Sign in",
@@ -11,7 +11,7 @@ export const en = {
     signOut: "Sign out",
   },
   home: {
-    title: "Application starter",
+    title: "Store",
     description:
       "A neutral starting point for a web application with accounts, a private area, and one reference profile you can replace.",
     signUp: "Create account",

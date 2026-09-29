@@ -1,11 +1,11 @@
 import type { TDictionary } from "./en";
 
 export const fa: TDictionary = {
-  siteName: "شروع‌کننده برنامه",
+  siteName: "فروشگاه",
   siteDescription: "نقطه شروعی برای ساخت یک برنامه وب کامل.",
   nav: {
     account: "حساب",
-    home: "شروع‌کننده برنامه",
+    home: "فروشگاه",
     dashboard: "داشبورد",
     profile: "نمایه",
     signIn: "ورود",
@@ -13,7 +13,7 @@ export const fa: TDictionary = {
     signOut: "خروج",
   },
   home: {
-    title: "شروع‌کننده برنامه",
+    title: "فروشگاه",
     description:
       "نقطه شروعی خنثی برای یک برنامه وب با حساب کاربری، بخش خصوصی، و یک نمایه نمونه که می‌توانید جایگزین کنید.",
     signUp: "ساخت حساب",
